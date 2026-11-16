@@ -79,7 +79,7 @@ def main():
                 found.setdefault(entry["title"].casefold(), entry)
     if not successful:
         raise RuntimeError("Aucun flux accessible : conserver le fichier actuel")
-    recent = sorted(found.values(), key=lambda x: x["date"], reverse=True)[:MAX_AUTOMATIC]
+    recent = sorted(found.values(), key=lambda x: dt.datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)[:MAX_AUTOMATIC]
     # Ne pas écraser les fiches éditoriales en cas d'échec ou de flux vide.
     if not recent:
         print("Aucune actualité récente pertinente : catalogue inchangé")
