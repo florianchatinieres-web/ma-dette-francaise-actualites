@@ -12,8 +12,10 @@ import xml.etree.ElementTree as ET
 ROOT = pathlib.Path(__file__).resolve().parent.parent
 TODAY = dt.datetime.now(dt.timezone.utc)
 QUERIES = [
-    '"dette publique" France site:insee.fr OR site:banque-france.fr OR site:economie.gouv.fr',
-    '"finances publiques" France site:vie-publique.fr OR site:budget.gouv.fr',
+    '"dette publique" France',
+    '"déficit public" France',
+    '"budget de l’État" France',
+    '"taux emprunt" dette France',
 ]
 KEYWORDS = ("dette", "déficit", "budget", "finances publiques", "emprunt", "taux", "obligation", "trésor")
 MAX_AUTOMATIC = 12
@@ -45,8 +47,6 @@ def article(item):
         return None
     if not any(word in title.casefold() for word in KEYWORDS):
         return None
-    if not re.search(r"France|français|publique|État|INSEE|Banque de France|Bercy", title, re.I):
-        return None
     return {
         "date": date.strftime("%d/%m/%Y"),
         "tag": "Veille automatique",
@@ -66,6 +66,8 @@ def main():
         raise ValueError("Catalogue éditorial invalide")
     found = {}
     successful = 0
+    seen = 0
+    eligible = 0
     for query in QUERIES:
         try:
             entries = load_feed(query)
@@ -73,10 +75,13 @@ def main():
         except (OSError, ET.ParseError) as exc:
             print("Flux indisponible:", exc)
             continue
+        seen += len(entries)
         for item in entries:
             entry = article(item)
             if entry:
+                eligible += 1
                 found.setdefault(entry["title"].casefold(), entry)
+    print(f"Diagnostic veille : {successful}/{len(QUERIES)} flux accessibles, {seen} titres lus, {eligible} titres admissibles")
     if not successful:
         raise RuntimeError("Aucun flux accessible : conserver le fichier actuel")
     recent = sorted(found.values(), key=lambda x: dt.datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)[:MAX_AUTOMATIC]
