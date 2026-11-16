@@ -19,6 +19,25 @@ QUERIES = [
 ]
 KEYWORDS = ("dette", "déficit", "budget", "finances publiques", "emprunt", "taux", "obligation", "trésor")
 MAX_AUTOMATIC = 12
+# Liste éditoriale de sources institutionnelles et de médias d'information.
+# La sélection n'implique pas une validation de chaque article.
+ALLOWED_SOURCES = (
+    "insee", "banque de france", "vie publique", "vie-publique",
+    "ministère de l'économie", "economie.gouv", "budget.gouv",
+    "cour des comptes", "agence france-presse", "afp",
+    "franceinfo", "france info", "france 24", "france inter",
+    "le monde", "le figaro", "les echos", "les échos",
+    "la tribune", "le parisien", "ouest-france", "ouest france",
+    "public sénat", "france télévision", "france télévisions",
+)
+FRANCE_TERMS = (
+    "france", "français", "française", "françaises", "française",
+    "budget 2027", "budget 2026", "état français",
+    "assemblée nationale", "sénat", "bercy", "cour des comptes",
+    "dette publique française",
+)
+FOREIGN_FOCUS = ("en allemagne", "en bulgarie", "au portugal", "en grèce",
+                 "en italie", "en espagne", "aux états-unis", "au royaume-uni")
 
 
 def load_feed(query):
@@ -45,7 +64,15 @@ def article(item):
         return None
     if (TODAY - date).days > 7 or date > TODAY + dt.timedelta(days=1):
         return None
-    if not any(word in title.casefold() for word in KEYWORDS):
+    normalized_title = title.casefold()
+    normalized_source = source.casefold()
+    if not any(word in normalized_title for word in KEYWORDS):
+        return None
+    if not any(name in normalized_source for name in ALLOWED_SOURCES):
+        return None
+    if not any(term in normalized_title for term in FRANCE_TERMS):
+        return None
+    if any(term in normalized_title for term in FOREIGN_FOCUS):
         return None
     return {
         "date": date.strftime("%d/%m/%Y"),
@@ -85,10 +112,10 @@ def main():
     if not successful:
         raise RuntimeError("Aucun flux accessible : conserver le fichier actuel")
     recent = sorted(found.values(), key=lambda x: dt.datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)[:MAX_AUTOMATIC]
-    # Ne pas écraser les fiches éditoriales en cas d'échec ou de flux vide.
+    # Même si aucun titre n'est retenu, supprimer les anciennes fiches de veille
+    # devenues hors sujet ou périmées. Les fiches éditoriales sont conservées.
     if not recent:
-        print("Aucune actualité récente pertinente : catalogue inchangé")
-        return
+        print("Aucun titre de veille retenu : publication des fiches éditoriales uniquement")
     payload = {
         "schemaVersion": 1,
         "updatedAt": TODAY.date().isoformat(),
