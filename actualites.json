@@ -1,0 +1,50 @@
+{
+  "schemaVersion": 1,
+  "updatedAt": "2026-11-16",
+  "articles": [
+    {
+      "date": "29 septembre 2026",
+      "tag": "Chiffres officiels",
+      "title": "La dette atteint 3 595,5 milliards d’euros au deuxième trimestre",
+      "short": "L’INSEE mesure une hausse de 59,6 milliards d’euros en trois mois. La dette représente 119 % du PIB.",
+      "simple": "La France a davantage de dette à la fin de juin qu’à la fin de mars. Cela concerne l’ensemble des administrations publiques : État, collectivités et Sécurité sociale. Ce chiffre est officiel, contrairement au compteur animé de l’accueil.",
+      "pro": "La dette brute au sens de Maastricht progresse de 59,6 Md€ au T2 2026, après +75,8 Md€ au T1. Le ratio passe de 117,5 % à 119,0 % du PIB. La dette nette augmente de 68,2 Md€ ; l’écart tient notamment à l’évolution de la trésorerie. Variation de dette et déficit ne sont pas strictement identiques.",
+      "why": "C’est notre point de référence officiel pour expliquer l’évolution du compteur.",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/9053525"
+    },
+    {
+      "date": "30 octobre 2026",
+      "tag": "Données",
+      "title": "La série officielle de dette est mise à jour",
+      "short": "L’INSEE publie une série trimestrielle de dette remontant à 1995, avec les données disponibles jusqu’au T2 2026.",
+      "simple": "Pour comparer les années et les présidences, il faut des chiffres construits avec la même méthode. Cette série aide à éviter de mélanger des estimations et des données officielles.",
+      "pro": "La série de dette de Maastricht présente les montants en milliards d’euros et en pourcentage du PIB. Les révisions statistiques peuvent modifier les valeurs historiques ; les comparaisons de mandats doivent donc indiquer leur millésime et leurs dates de référence.",
+      "why": "Utile pour nos graphiques historiques et les comparaisons entre mandats.",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/2830301"
+    },
+    {
+      "date": "30 septembre 2026",
+      "tag": "Taux et intérêts",
+      "title": "Pourquoi la charge des intérêts inquiète",
+      "short": "Une analyse revient sur l’alerte concernant la progression du coût de la dette et l’effet des taux d’emprunt.",
+      "simple": "Quand l’État emprunte ou renouvelle un emprunt à un taux plus élevé, ses intérêts peuvent augmenter. Cela laisse moins de marge dans le budget, même si tous les anciens emprunts ne changent pas de taux immédiatement.",
+      "pro": "La transmission d’une hausse des taux est progressive : elle dépend de la maturité moyenne, du refinancement et des titres indexés. Les montants évoqués pour les prochaines années sont des scénarios et dépendent du périmètre retenu, État ou ensemble des administrations.",
+      "why": "Les intérêts sont un flux annuel, à ne pas confondre avec le stock de dette.",
+      "source": "Dette de la France · analyse",
+      "url": "https://dettedelafrance.fr/actualites/interets-de-la-dette-l-alerte-de-la-cour-des-comptes-decryptee"
+    },
+    {
+      "date": "27 septembre 2026",
+      "tag": "Marchés financiers",
+      "title": "L’État emprunte à court terme : que signifie une adjudication ?",
+      "short": "Une opération de bons du Trésor de 6,991 milliards d’euros illustre comment l’État se finance au quotidien.",
+      "simple": "L’État vend des titres de dette à des investisseurs pour obtenir de l’argent. Une émission de près de 7 milliards ne signifie pas automatiquement que la dette totale augmente d’autant : une partie peut servir à rembourser des titres arrivés à échéance.",
+      "pro": "Les BTF sont des instruments négociables de court terme. Il faut distinguer émission brute, remboursement du principal, refinancement et variation nette de l’encours. Une demande élevée lors d’une adjudication ne préjuge pas à elle seule de la trajectoire budgétaire.",
+      "why": "Un exemple concret pour comprendre le financement de l’État.",
+      "source": "Dette de la France · analyse",
+      "url": "https://dettedelafrance.fr/actualites/btf-la-france-leve-6-991-milliards-d-euros-en-dette-court-terme"
+    }
+  ]
+}
