@@ -64,7 +64,10 @@ def article(item):
         return None
     if (TODAY - date).days > 7 or date > TODAY + dt.timedelta(days=1):
         return None
-    normalized_title = title.casefold()
+    # Google Actualités ajoute souvent « - Nom du média » au titre.
+    # Ne pas prendre « Ouest-France » pour une mention de la France dans l'article.
+    subject_title = title.rsplit(" - ", 1)[0]
+    normalized_title = subject_title.casefold()
     normalized_source = source.casefold()
     if not any(word in normalized_title for word in KEYWORDS):
         return None
