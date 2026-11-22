@@ -90,14 +90,78 @@ def article(item):
     }
 
 
+# Les articles acceptés sont conservés ; seules les nouvelles entrées sont filtrées.
+# Un article passe en archive après 365 jours. Les archives ne sont pas chargées
+# par l'application actuelle : elle continue de lire actualites.json (schemaVersion 1).
+ARCHIVE_DAYS = 365
+MONTHS = {
+    "janvier": 1, "février": 2, "fevrier": 2, "mars": 3, "avril": 4,
+    "mai": 5, "juin": 6, "juillet": 7, "août": 8, "aout": 8,
+    "septembre": 9, "octobre": 10, "novembre": 11, "décembre": 12, "decembre": 12,
+}
+
+
+def read_catalogue(path):
+    if not path.exists():
+        return {"schemaVersion": 1, "articles": []}
+    data = json.loads(path.read_text(encoding="utf-8"))
+    if data.get("schemaVersion") != 1 or not isinstance(data.get("articles"), list):
+        raise ValueError(f"Catalogue invalide : {path}")
+    return data
+
+
+def article_date(value):
+    value = str(value).strip().casefold()
+    for fmt in ("%d/%m/%Y", "%Y-%m-%d"):
+        try:
+            return dt.datetime.strptime(value, fmt).date()
+        except ValueError:
+            pass
+    match = re.fullmatch(r"(\d{1,2})\s+([a-zéûèêôîàù]+)\s+(\d{4})", value)
+    if match and match.group(2) in MONTHS:
+        try:
+            return dt.date(int(match.group(3)), MONTHS[match.group(2)], int(match.group(1)))
+        except ValueError:
+            pass
+    # Ne jamais supprimer un article dont la date n'est pas interprétable.
+    return None
+
+
+def article_key(entry):
+    url = str(entry.get("url") or "").strip()
+    if url:
+        return ("url", url)
+    return ("title", str(entry.get("title") or "").strip().casefold())
+
+
+def merge(*groups):
+    items = {}
+    for group in groups:
+        for entry in group:
+            if isinstance(entry, dict) and entry.get("title"):
+                items.setdefault(article_key(entry), entry)
+    return list(items.values())
+
+
+def sort_articles(entries):
+    return sorted(entries, key=lambda e: article_date(e.get("date", "")) or dt.date.min, reverse=True)
+
+
 def main():
-    editorial = json.loads((ROOT / "editorial.json").read_text(encoding="utf-8"))
-    if editorial.get("schemaVersion") != 1 or not editorial.get("articles"):
-        raise ValueError("Catalogue éditorial invalide")
-    found = {}
-    successful = 0
-    seen = 0
-    eligible = 0
+    editorial = read_catalogue(ROOT / "editorial.json")
+    if not editorial["articles"]:
+        raise ValueError("Catalogue éditorial vide")
+    destination = ROOT / "actualites.json"
+    archive_path = ROOT / "archives.json"
+    previous = read_catalogue(destination)
+    archived = read_catalogue(archive_path)
+
+    # Les articles éditoriaux ne sont plus protégés contre le vieillissement.
+    # L'historique existant a priorité, puis les archives et les fiches éditoriales.
+    known = merge(previous["articles"], archived["articles"], editorial["articles"])
+    keys = {article_key(entry) for entry in known}
+    new_entries = []
+    successful = seen = eligible = 0
     for query in QUERIES:
         try:
             entries = load_feed(query)
@@ -107,26 +171,37 @@ def main():
             continue
         seen += len(entries)
         for item in entries:
+            # Le filtre de pertinence ne s'applique qu'aux nouveaux articles.
+            raw_link = (item.findtext("link") or "").strip()
+            raw_title = " ".join((item.findtext("title") or "").split())
+            if ("url", raw_link) in keys or ("title", raw_title.casefold()) in keys:
+                continue
             entry = article(item)
             if entry:
                 eligible += 1
-                found.setdefault(entry["title"].casefold(), entry)
-    print(f"Diagnostic veille : {successful}/{len(QUERIES)} flux accessibles, {seen} titres lus, {eligible} titres admissibles")
+                key = article_key(entry)
+                if key not in keys:
+                    keys.add(key)
+                    new_entries.append(entry)
     if not successful:
-        raise RuntimeError("Aucun flux accessible : conserver le fichier actuel")
-    recent = sorted(found.values(), key=lambda x: dt.datetime.strptime(x["date"], "%d/%m/%Y"), reverse=True)[:MAX_AUTOMATIC]
-    # Même si aucun titre n'est retenu, supprimer les anciennes fiches de veille
-    # devenues hors sujet ou périmées. Les fiches éditoriales sont conservées.
-    if not recent:
-        print("Aucun titre de veille retenu : publication des fiches éditoriales uniquement")
-    payload = {
-        "schemaVersion": 1,
-        "updatedAt": TODAY.date().isoformat(),
-        "articles": recent + editorial["articles"],
-    }
-    destination = ROOT / "actualites.json"
+        # Ne jamais effacer l'historique à cause d'une panne des sources.
+        raise RuntimeError("Aucun flux accessible : conserver les fichiers actuels")
+    all_entries = merge(known, new_entries)
+    current, archives = [], []
+    for entry in all_entries:
+        published = article_date(entry.get("date", ""))
+        if published is not None and (TODAY.date() - published).days > ARCHIVE_DAYS:
+            archives.append(entry)
+        else:
+            current.append(entry)
+    current, archives = sort_articles(current), sort_articles(archives)
+    # Le format de l'API actuelle reste inchangé pour les applications installées.
+    payload = {"schemaVersion": 1, "updatedAt": TODAY.date().isoformat(), "articles": current}
+    archive_payload = {"schemaVersion": 1, "updatedAt": TODAY.date().isoformat(), "articles": archives}
     destination.write_text(json.dumps(payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
-    print(f"Publication : {len(recent)} titres de veille + {len(editorial['articles'])} fiches éditoriales")
+    archive_path.write_text(json.dumps(archive_payload, ensure_ascii=False, indent=2) + "\n", encoding="utf-8")
+    print(f"Veille : {successful}/{len(QUERIES)} flux, {seen} titres, {eligible} candidats ; "
+          f"{len(new_entries)} nouveaux, {len(current)} actifs, {len(archives)} archivés")
 
 
 if __name__ == "__main__":
