@@ -47,17 +47,6 @@
       "url": "https://news.google.com/rss/articles/CBMi6AFBVV95cUxQSHlFcVhhQlF5WDN1REZyOUZ1S3I1QkMyU0QxN0h0M1dYVFZPWDZpcC1Za0dTZXREZk9PMXRvdUhYUXZPN2xaYmNoaWlxZWt6NkR0V2NXQmhiZGl6c0ppd2hYc1d5eWtLODdyRlZqeG8xcUdieXRWXzV2YXZIc1hjMUR2VlpxZThTVHFqVEJzZENnTzRLWWdOTEhMR2FwRV9haHd4d1RwaXNXaVo4dWFuSXMwMmNPVTJOVk5VcEFnQ2lYcDNqemota05uSEs4bVd1cHFtQWRqakt2SGZGX19kMmdnZVkyOWdj?oc=5"
     },
     {
-      "date": "29 septembre 2026",
-      "tag": "Chiffres officiels",
-      "title": "La dette atteint 3 595,5 milliards d’euros au deuxième trimestre",
-      "short": "L’INSEE mesure une hausse de 59,6 milliards d’euros en trois mois. La dette représente 119 % du PIB.",
-      "simple": "La France a davantage de dette à la fin de juin qu’à la fin de mars. Cela concerne l’ensemble des administrations publiques : État, collectivités et Sécurité sociale. Ce chiffre est officiel, contrairement au compteur animé de l’accueil.",
-      "pro": "La dette brute au sens de Maastricht progresse de 59,6 Md€ au T2 2026, après +75,8 Md€ au T1. Le ratio passe de 117,5 % à 119,0 % du PIB. La dette nette augmente de 68,2 Md€ ; l’écart tient notamment à l’évolution de la trésorerie. Variation de dette et déficit ne sont pas strictement identiques.",
-      "why": "C’est notre point de référence officiel pour expliquer l’évolution du compteur.",
-      "source": "INSEE",
-      "url": "https://www.insee.fr/fr/statistiques/9053525"
-    },
-    {
       "date": "30 octobre 2026",
       "tag": "Données",
       "title": "La série officielle de dette est mise à jour",
@@ -78,6 +67,17 @@
       "why": "Les intérêts sont un flux annuel, à ne pas confondre avec le stock de dette.",
       "source": "Dette de la France · analyse",
       "url": "https://dettedelafrance.fr/actualites/interets-de-la-dette-l-alerte-de-la-cour-des-comptes-decryptee"
+    },
+    {
+      "date": "29 septembre 2026",
+      "tag": "Chiffres officiels",
+      "title": "La dette atteint 3 595,5 milliards d’euros au deuxième trimestre",
+      "short": "L’INSEE mesure une hausse de 59,6 milliards d’euros en trois mois. La dette représente 119 % du PIB.",
+      "simple": "La France a davantage de dette à la fin de juin qu’à la fin de mars. Cela concerne l’ensemble des administrations publiques : État, collectivités et Sécurité sociale. Ce chiffre est officiel, contrairement au compteur animé de l’accueil.",
+      "pro": "La dette brute au sens de Maastricht progresse de 59,6 Md€ au T2 2026, après +75,8 Md€ au T1. Le ratio passe de 117,5 % à 119,0 % du PIB. La dette nette augmente de 68,2 Md€ ; l’écart tient notamment à l’évolution de la trésorerie. Variation de dette et déficit ne sont pas strictement identiques.",
+      "why": "C’est notre point de référence officiel pour expliquer l’évolution du compteur.",
+      "source": "INSEE",
+      "url": "https://www.insee.fr/fr/statistiques/9053525"
     },
     {
       "date": "27 septembre 2026",
