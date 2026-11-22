@@ -26,12 +26,12 @@ jobs:
         run: python scripts/actualiser_actualites.py
       - name: Publier seulement en cas de changement
         run: |
-          if git diff --quiet -- actualites.json; then
+          if git diff --quiet -- actualites.json archives.json; then
             echo "Aucun changement à publier"
             exit 0
           fi
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
-          git add actualites.json
+          git add actualites.json archives.json
           git commit -m "Actualiser la veille des finances publiques"
           git push
